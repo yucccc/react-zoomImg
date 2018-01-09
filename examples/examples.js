@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import ZoomImg from '../src/index'
-// import ZoomImg from '../dist/react-zoomImg'
+// import ZoomImg from '../src/index'
+import ZoomImg from '../dist/react-zoomImg'
 import img1 from './images/person.jpeg'
 
 export default class Examples extends React.Component {

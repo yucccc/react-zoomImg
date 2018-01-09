@@ -1,5 +1,6 @@
 const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
     // 入口
@@ -15,6 +16,18 @@ module.exports = {
         library: 'react-zoomImg',
         umdNamedDefine: true
     },
+
+    externals: {
+        'react': 'umd react',
+        'react-dom': 'umd react-dom'
+    },
+    plugins: [
+        // 压缩
+        new UglifyJsPlugin(),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production')
+        })
+    ],
     module: {
         rules: [
             {
@@ -35,13 +48,13 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['env', 'react','es2015','stage-0']
+                        presets: ['env', 'react', 'es2015', 'stage-0']
                     }
                 }
             },
             {
                 test: /\.css$/,
-                use: [ 'style-loader', 'css-loader' ]
+                use: ['style-loader', 'css-loader']
             }
         ],
     },
