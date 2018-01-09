@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "react-zoomimg",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "基于react图片放大插件",
   "main": "dist/react-zoomImg.js",
   "scripts": {
