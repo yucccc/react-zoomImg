@@ -3,7 +3,14 @@ import React, {Component} from 'react'
 import Overlay from './overlay'
 import styled from 'styled-components'
 import defaultConfig from './config'
-import {getScale} from "./utlis";
+import {getScale, forbadeScroll} from "./utlis";
+import './scrolling'
+import './../style/common.css'
+import BScroll from 'better-scroll'
+const Win  = window
+const windowW = Win.innerWidth
+const windowH = Win.innerHeight
+
 export default class Zoom extends Component {
     static defaultProps = {
         // 放大信息
@@ -22,24 +29,40 @@ export default class Zoom extends Component {
             isZoomed: true,
             // 原始src
             src: props.image.currentSrc || props.image.src,
-            hdSrc: props.hdSrc
+            hdSrc: props.hdSrc,
         }
     }
 
     componentDidMount() {
-        this.setState({hasLoaded: true})
+        // forbadeScroll()
+
+        setTimeout(()=>{
+            this.setState({hasLoaded: true})
+        },0)
+        let scroll = new BScroll('.wrapper', {
+            click: true
+        })
+
     }
 
     unzoom() {
         const {option} = this.props
+
+        // forbadeScroll(false)
 
         this.setState({ isZoomed: false }, () => {
             setTimeout(() => {
                 this.props.onUnzoom()
             }, option.animationTime)
         })
-    }
 
+    }
+    componentWillMount () {
+
+    }
+    _getH(h) {
+        return h
+    }
     // 获取放大图片样式
     _getZoomImageStyle() {
         const {image, defaultStyles} = this.props
@@ -61,8 +84,8 @@ export default class Zoom extends Component {
         const imageCenterY = top  + height / 2
 
         // 偏移位置
-        const translateX = viewportX - imageCenterX
-        const translateY = viewportY - imageCenterY
+        let translateX = viewportX - imageCenterX
+        let translateY = viewportY - imageCenterY
 
         const scale = getScale({
             width,
@@ -78,6 +101,14 @@ export default class Zoom extends Component {
                 ...style
             }
         }
+        // 长图
+        const scaleHeight = scale * height
+        let scrollHeight = '100%'
+        if (scaleHeight > windowH) {
+            const beyondH = (scaleHeight - windowH) / 2
+            translateY = beyondH + translateY
+            scrollHeight = scaleHeight
+        }
 
         const zoomStyle = {
             transform: `translate3d(${translateX}px, ${translateY}px, 0) 
@@ -89,28 +120,35 @@ export default class Zoom extends Component {
         return {
             ...defaultStyles.zoomImage,
             ...style,
-            ...zoomStyle
+            ...zoomStyle,
+            scrollHeight
         }
+
 
     }
 
     render() {
         const {src} = this.state
         const {image, defaultStyles, option} = this.props
+        const zoomStyle = this._getZoomImageStyle()
         return (
-            <ZoomContainer>
+            <ZoomContainer  >
                 <Overlay
                     isVisible={this.state.isZoomed}
                     defaultStyles={defaultStyles}
                 />
-                <ImgContainer
-                    className='zoom-img'
-                    {...this.props.zoomImage}
-                    animationTime={option.animationTime}
-                    src={src}
-                    style={this._getZoomImageStyle()}
-                    alt={image.alt}
-                />
+                <div className={'wrapper'} >
+                    <div style={{height: zoomStyle.scrollHeight}}>
+                        <ImgContainer
+                            className='zoom-img'
+                            {...this.props.zoomImage}
+                            animationTime={option.animationTime}
+                            src={src}
+                            style={zoomStyle}
+                            alt={image.alt}
+                        />
+                    </div>
+                </div>
             </ZoomContainer>
         )
     }
@@ -123,6 +161,7 @@ const ZoomContainer = styled.div`
    right: 0;
    top: 0;
    bottom: 0;
+   overflow: hidden;
 `
 
 const ImgContainer = styled.img`

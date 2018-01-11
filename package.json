@@ -42,6 +42,7 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
+    "better-scroll": "^1.7.2",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

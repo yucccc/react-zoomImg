@@ -1,8 +1,12 @@
 // 创建容器
 const body = document.body
+const html = document.documentElement
+
 const Win  = window
 const windowW = Win.innerWidth
 const windowH = Win.innerHeight
+const htmlOverflow = 'visible';
+const bodyOverflow = 'visible';
 
 export const createPortalContainer = tag => {
     const portal = document.createElement(tag)
@@ -26,20 +30,30 @@ export const computedMaxWidth = ({naturalWidth}) => {
 export const getScale = ({width, height, naturalWidth, naturalHeight}) => {
     // 要缩放的宽度
     const scaleWidth = computedMaxWidth({naturalWidth})
-    return (scaleWidth / width).toFixed(4)
+    return (scaleWidth / width).toFixed(6)
 }
+
+let overflowHtml = Win.getComputedStyle(html).overflow
+let overflowBody = Win.getComputedStyle(body).overflow
 
 // 禁止滚动
-export const forbadeScroll = () => {
-    let overflowH = Win.getComputedStyle(html).overflow
-    let overflowB = Win.getComputedStyle(body).overflow
-    // let posB      = Win.getComputedStyle(body).position
-    this.setState({
-        htmlOverflow: overflowH,
-        bodyOverflow: overflowB
-    })
-
-    html.style.overflow = 'hidden'
-    body.style.overflow = 'hidden'
-    // body.style.position = 'fixed'
+export const forbadeScroll = (flag = true) => {
+    flag ?  ModalHelper.afterOpen() : ModalHelper.beforeClose()
 }
+
+var ModalHelper = (function(bodyCls) {
+    var scrollTop;
+    return {
+        afterOpen: function() {
+            scrollTop = document.scrollingElement.scrollTop;
+            document.body.classList.add(bodyCls);
+            document.body.style.top = -scrollTop + 'px';
+        },
+        beforeClose: function() {
+            document.body.classList.remove(bodyCls);
+            // scrollTop lost after set position:fixed, restore it back.
+            document.scrollingElement.scrollTop = scrollTop;
+        }
+    };
+})('modal-open');
+

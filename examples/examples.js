@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-// import ZoomImg from '../src/index'
-import ZoomImg from '../dist/react-zoomImg'
+import ZoomImg from '../src/index'
+// import ZoomImg from '../dist/react-zoomImg'
 import img1 from './images/person.jpeg'
-
+import longimg from './images/long.jpg'
 export default class Examples extends React.Component {
     constructor(props) {
         super(props)
@@ -33,9 +33,9 @@ export default class Examples extends React.Component {
                 </ZoomImg>
 
                 <h1>长图</h1>
-                <ZoomImg src={img1}
+                <ZoomImg src={longimg}
                          alt={'图片'}
-                         className={'demo1'}
+                         className={'demo2'}
 
                          defaultStyles={{
                              zoom: {},
@@ -45,7 +45,7 @@ export default class Examples extends React.Component {
                              }
                          }}
                          option={{
-                             animationTime: 1000
+                             animationTime: 100
                          }}
                 >
                 </ZoomImg>
@@ -61,7 +61,11 @@ const Container = styled.div`
       }
       text-align: center;
    }
+  
    img {
       width: 300px;      
+   }
+    .demo2 {
+      width: 50px;
    }
 `

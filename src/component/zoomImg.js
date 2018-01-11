@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import EventsWrapper from './EventsWrapper'
 import Zoom from './Zoom'
 
-// 1. 长图 可超出屏幕
+// 1. 长  如果超出屏幕则居顶 否则居中
 // 2. 宽  最大不超过屏幕B并且不超过原图宽度 默认到屏幕大小
 // 3. 使用
 
@@ -90,10 +90,11 @@ export default class ZoomImg extends React.Component {
 
     render() {
         const {isZoomed, hdSrc} = this.state
-        const {src, alt, defaultStyles, option} = this.props
+        const {src, alt, defaultStyles, option, className} = this.props
         return [
             <img key='image'
                  src={src}
+                 className={className}
                  alt={alt}
                  onClick={this._handleZoom}
                  ref={image => this.image = image}/>,
